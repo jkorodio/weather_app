@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:weather_app/core/routemanager/Routes.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
 
@@ -121,7 +122,7 @@ class Item extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff1a2344)),
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.Forecast);
+                      context.push(AppRoutes.Forecast);
                     },
                     child: Text(
                       'Next 7 Days Forecast',

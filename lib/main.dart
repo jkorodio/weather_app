@@ -1,28 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:weather_app/Core/routemanager/Routes.dart';
 import 'package:weather_app/core/injectable/injectable.dart';
-import 'package:weather_app/core/routemanager/route_manager.dart';
+import 'package:weather_app/pages/forecast/forecast_screen.dart';
+import 'package:weather_app/pages/home/home_screen.dart';
 
 void main() {
   configureDependencies();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(430, 930),
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: child,
-        initialRoute: AppRoutes.Home,
-        onGenerateRoute: Routemaganer.route,
-      ),
+      designSize: const Size(430, 930),
+      builder: (context, child) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: _router, // Set up GoRouter here
+        );
+      },
     );
   }
+
+  // Define GoRouter configuration
+  final GoRouter _router = GoRouter(
+    initialLocation: AppRoutes.Home,
+    routes: [
+      GoRoute(
+        path: AppRoutes.Home,
+        builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.Forecast,
+        builder: (context, state) => ForecastScreen(),
+      ),
+    ],
+  );
 }

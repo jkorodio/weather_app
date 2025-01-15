@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:weather_app/core/api/services.dart';
 import 'package:weather_app/core/injectable/injectable.dart';
-import 'package:weather_app/core/routemanager/routes.dart';
 import 'package:weather_app/pages/forecast/cubit/forecast_state.dart';
 import 'package:weather_app/pages/forecast/cubit/forecast_view_model.dart';
+import 'package:weather_app/utils/utils.dart';
 
 class ForecastScreen extends StatelessWidget {
   ForecastScreen({super.key});
@@ -84,7 +84,7 @@ class ForecastScreen extends StatelessWidget {
                                   'http:${viewmodel.forecast[index].day!.condition!.icon}'),
                               title: Text(
                                 '${viewmodel.forecast[index].day!.avgtempC}'
-                                ' ${viewmodel.forecast[index].date}',
+                                ' ${formatDate(viewmodel.forecast[index].date.toString())}',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

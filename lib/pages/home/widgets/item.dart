@@ -20,7 +20,7 @@ class Item extends StatelessWidget {
           child: Text(
             view.location!.name ?? '',
             style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 25.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.white),
           ),
@@ -46,7 +46,7 @@ class Item extends StatelessWidget {
                 view.current!.tempC.toString(),
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 25.sp,
+                    fontSize: 40.sp,
                     fontWeight: FontWeight.w700),
               ),
               SizedBox(height: 20.h),
@@ -81,7 +81,7 @@ class Item extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                   CustomItem(
-                    icon: Icons.sunny,
+                    icon: Icons.mode_night,
                     text: 'Moonrise',
                     textdegre:
                         view.forecast!.forecastday![0].astro!.moonrise ?? '',
@@ -97,7 +97,7 @@ class Item extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   CustomItem(
-                    icon: Icons.sunny,
+                    icon: Icons.dew_point,
                     text: 'Humidity',
                     textdegre: '${view.current!.humidity ?? ''}',
                     size: 20.sp,
@@ -106,7 +106,7 @@ class Item extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                   CustomItem(
-                    icon: Icons.sunny,
+                    icon: Icons.air,
                     text: 'Windy',
                     textdegre: '${view.current!.windKph ?? ''}',
                     size: 20.sp,

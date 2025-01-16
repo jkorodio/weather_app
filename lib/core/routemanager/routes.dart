@@ -1,4 +1,5 @@
 class AppRoutes {
-  static const String Home = '/';
-  static const String Forecast = '/forecast';
+  static const String home = '/';
+  static const String weatherlist = '/weatherlist';
+  static const String forecast = '/forecast';
 }

@@ -5,6 +5,7 @@ import 'package:weather_app/Core/routemanager/Routes.dart';
 import 'package:weather_app/core/injectable/injectable.dart';
 import 'package:weather_app/pages/forecast/forecast_screen.dart';
 import 'package:weather_app/pages/home/home_screen.dart';
+import 'package:weather_app/pages/weatherlist/weather_list_screen.dart';
 
 void main() {
   configureDependencies();
@@ -29,14 +30,18 @@ class MyApp extends StatelessWidget {
 
   // Define GoRouter configuration
   final GoRouter _router = GoRouter(
-    initialLocation: AppRoutes.Home,
+    initialLocation: AppRoutes.home,
     routes: [
       GoRoute(
-        path: AppRoutes.Home,
+        path: AppRoutes.home,
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
-        path: AppRoutes.Forecast,
+        path: AppRoutes.weatherlist,
+        builder: (context, state) => WeatherlistScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.forecast,
         builder: (context, state) => ForecastScreen(),
       ),
     ],

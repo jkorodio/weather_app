@@ -36,8 +36,9 @@ class ForecastScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 15.h, left: 20.w),
+              margin: EdgeInsets.only(top: 35.h, left: 10.w, right: 10.w),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                       onPressed: () {
@@ -45,14 +46,14 @@ class ForecastScreen extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.arrow_back,
-                        weight: 100.w,
+                        size: 30.sp,
                         color: Colors.white,
                       )),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                     child: Text(
-                      '7 Day Forecast',
+                      '7 Days Forecast',
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 30.sp,
@@ -62,8 +63,8 @@ class ForecastScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              height: 800.h,
+            SizedBox(
+              height: 790.h,
               child: BlocBuilder<ForecastViewModel, ForecastState>(
                 bloc: viewmodel,
                 builder: (context, state) {

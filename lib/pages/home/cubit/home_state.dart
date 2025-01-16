@@ -16,3 +16,8 @@ class HomeSuccess extends HomeState {
   ResponseEntity responseEntity;
   HomeSuccess({required this.responseEntity});
 }
+
+class HomeUnitUpdated extends HomeState {
+  final String unit;
+  HomeUnitUpdated({required this.unit});
+}

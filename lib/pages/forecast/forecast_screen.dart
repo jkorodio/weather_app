@@ -10,8 +10,8 @@ import 'package:weather_app/utils/utils.dart';
 
 class ForecastScreen extends StatelessWidget {
   ForecastScreen({super.key});
-  var viewmodel = getIt<ForecastViewModel>();
-  var location = LocationServices();
+  final viewmodel = getIt<ForecastViewModel>();
+  final location = LocationServices();
 
   @override
   Widget build(BuildContext context) {

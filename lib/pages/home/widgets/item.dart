@@ -6,8 +6,8 @@ import 'package:weather_app/core/routemanager/Routes.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
 
 class Item extends StatelessWidget {
-  Item({super.key, required this.view});
-  ResponseEntity view;
+  const Item({super.key, required this.view});
+  final ResponseEntity view;
 
   @override
   Widget build(BuildContext context) {

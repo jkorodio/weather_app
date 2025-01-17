@@ -9,8 +9,8 @@ import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  var viewmodel = getIt<HomeViewModel>();
-  var location = LocationServices();
+  final viewmodel = getIt<HomeViewModel>();
+  final location = LocationServices();
   @override
   Widget build(BuildContext context) {
     location.getLocation().then((value) {

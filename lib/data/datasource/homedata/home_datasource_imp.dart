@@ -14,9 +14,9 @@ class HomeDatasourceImp implements HomeDatasource {
   Future<Either<Fauilers, ResponseEntity>> getWeather({String? city}) async {
     try {
       var response = await apimanager.getWeather(city: city);
-      var HomeResponse = ResponseDto.fromJson(response.data);
+      var homeResponse = ResponseDto.fromJson(response.data);
       if (response.statusCode! >= 200 && response.statusCode! <= 299) {
-        return Right(HomeResponse);
+        return Right(homeResponse);
       } else {
         return Left(ServerError(ErrorMessage: response.statusMessage!));
       }

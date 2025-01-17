@@ -9,7 +9,9 @@ import 'package:weather_app/pages/forecast/cubit/forecast_view_model.dart';
 import 'package:weather_app/utils/utils.dart';
 
 class ForecastScreen extends StatelessWidget {
-  ForecastScreen({super.key});
+  ForecastScreen({super.key, required this.unitSign});
+
+  final String unitSign; // Accept the selected unit sign (°C or °F)
   final viewmodel = getIt<ForecastViewModel>();
   final location = LocationServices();
 
@@ -84,7 +86,7 @@ class ForecastScreen extends StatelessWidget {
                               leading: Image.network(
                                   'http:${viewmodel.forecast[index].day!.condition!.icon}'),
                               title: Text(
-                                '${viewmodel.forecast[index].day!.avgtempC}'
+                                '${unitSign == '°C' ? viewmodel.forecast[index].day!.avgtempC : viewmodel.forecast[index].day!.avgtempF} $unitSign'
                                 ' ${formatDate(viewmodel.forecast[index].date.toString())}',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -92,8 +94,8 @@ class ForecastScreen extends StatelessWidget {
                                     fontSize: 25.sp),
                               ),
                               subtitle: Text(
-                                'Max: ${viewmodel.forecast[index].day!.maxtempC}'
-                                'Min: ${viewmodel.forecast[index].day!.mintempC}',
+                                'Max: ${unitSign == '°C' ? viewmodel.forecast[index].day!.maxtempC : viewmodel.forecast[index].day!.maxtempF} $unitSign'
+                                ' Min: ${unitSign == '°C' ? viewmodel.forecast[index].day!.mintempC : viewmodel.forecast[index].day!.mintempF} $unitSign',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20.sp),
                               ),
@@ -101,7 +103,7 @@ class ForecastScreen extends StatelessWidget {
                           );
                         });
                   } else if (state is ForecastStateError) {
-                    return Text(state.fauilers.ErrorMessage);
+                    return Text(state.fauilers.errorMessage);
                   } else if (state is ForecastStateLoading) {
                     return Center(
                       child: Text(

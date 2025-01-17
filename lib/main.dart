@@ -6,6 +6,8 @@ import 'package:weather_app/core/injectable/injectable.dart';
 import 'package:weather_app/pages/forecast/forecast_screen.dart';
 import 'package:weather_app/pages/home/home_screen.dart';
 import 'package:weather_app/pages/weatherlist/weather_list_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 
 void main() {
   configureDependencies();
@@ -20,15 +22,17 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(430, 930),
       builder: (context, child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: _router, // Set up GoRouter here
+        return BlocProvider<HomeViewModel>(
+          create: (context) => getIt<HomeViewModel>(),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: _router,
+          ),
         );
       },
     );
   }
 
-  // Define GoRouter configuration
   final GoRouter _router = GoRouter(
     initialLocation: AppRoutes.home,
     routes: [
@@ -37,12 +41,18 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
-        path: AppRoutes.weatherlist,
-        builder: (context, state) => WeatherlistScreen(),
+        path: '/weatherlist',
+        builder: (context, state) {
+          final city = state.extra as String?;
+          return WeatherlistScreen(city: city);
+        },
       ),
       GoRoute(
         path: AppRoutes.forecast,
-        builder: (context, state) => ForecastScreen(),
+        builder: (context, state) {
+          final unitSign = state.extra as String? ?? 'Celsius';
+          return ForecastScreen(unitSign: unitSign);
+        },
       ),
     ],
   );

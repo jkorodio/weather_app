@@ -1,12 +1,12 @@
 abstract class Fauilers {
-  String ErrorMessage;
-  Fauilers({required this.ErrorMessage});
+  String errorMessage;
+  Fauilers({required this.errorMessage});
 }
 
 class ServerError extends Fauilers {
-  ServerError({required super.ErrorMessage});
+  ServerError({required super.errorMessage});
 }
 
 class NetworkError extends Fauilers {
-  NetworkError({required super.ErrorMessage});
+  NetworkError({required super.errorMessage});
 }

@@ -18,10 +18,10 @@ class HomeDatasourceImp implements HomeDatasource {
       if (response.statusCode! >= 200 && response.statusCode! <= 299) {
         return Right(homeResponse);
       } else {
-        return Left(ServerError(ErrorMessage: response.statusMessage!));
+        return Left(ServerError(errorMessage: response.statusMessage!));
       }
     } catch (e) {
-      return Left(NetworkError(ErrorMessage: e.toString()));
+      return Left(NetworkError(errorMessage: e.toString()));
     }
   }
 }

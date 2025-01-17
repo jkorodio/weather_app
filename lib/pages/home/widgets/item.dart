@@ -6,8 +6,15 @@ import 'package:weather_app/core/routemanager/Routes.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
 
 class Item extends StatelessWidget {
-  const Item({super.key, required this.view});
+  const Item(
+      {super.key,
+      required this.view,
+      required this.temp,
+      required this.unitSign});
+
   final ResponseEntity view;
+  final double temp;
+  final String unitSign; // New parameter for unit sign
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +67,9 @@ class Item extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: Colors.white),
                       ),
+                      // Display temperature with the unit sign (°C or °F)
                       Text(
-                        view.current!.tempC.toString(),
+                        '${temp.toStringAsFixed(1)} $unitSign', // Adding the unit sign here
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 40.sp,
@@ -72,14 +80,14 @@ class Item extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              'Max: ${view.forecast!.forecastday![0].day!.maxtempC}',
+                              'Max: ${unitSign == '°C' ? view.forecast!.forecastday![0].day!.maxtempC : view.forecast!.forecastday![0].day!.maxtempF} $unitSign',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 25.sp,
                                   fontWeight: FontWeight.w700),
                             ),
                             Text(
-                              'Min: ${view.forecast!.forecastday![0].day!.mintempC}',
+                              'Min: ${unitSign == '°C' ? view.forecast!.forecastday![0].day!.mintempC : view.forecast!.forecastday![0].day!.mintempF} $unitSign',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 25.sp,
@@ -144,7 +152,7 @@ class Item extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff1a2344)),
                             onPressed: () {
-                              context.push(AppRoutes.forecast);
+                              context.push(AppRoutes.forecast, extra: unitSign);
                             },
                             child: Text(
                               'Next 7 Days Forecast',
@@ -164,7 +172,8 @@ class Item extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.list, color: Colors.white, size: 35.sp),
               onPressed: () {
-                context.push(AppRoutes.weatherlist);
+                context.push(AppRoutes.weatherlist,
+                    extra: view.location!.name ?? '');
               },
             ),
           ),

@@ -1,19 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 import 'package:weather_app/domain/usecase/home_usecase.dart';
 import 'package:weather_app/pages/home/cubit/home_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:injectable/injectable.dart';
 
 @injectable
 class HomeViewModel extends Cubit<HomeState> {
-  HomeViewModel({required this.home}) : super(HomeInatial());
-  HomeUsecase home;
+  final HomeUsecase home;
+  String _unit = 'Celsius';
+  static const String unitKey = "unit";
 
-  String _unit = 'Celsius'; // Default unit is Celsius
+  HomeViewModel({required this.home}) : super(HomeInatial()) {
+    _loadUnit();
+  }
 
-  // Getter for the unit
   String get unit => _unit;
 
-  // Method to get the weather for the current city (if provided)
+  Future<void> _loadUnit() async {
+    final prefs = await SharedPreferences.getInstance();
+    _unit = prefs.getString(unitKey) ?? 'Celsius';
+    emit(HomeUnitUpdated(unit: _unit));
+  }
+
+  Future<void> _saveUnit(String unit) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(unitKey, unit);
+  }
+
   getWeather({String? city}) async {
     emit(HomeLoading());
     var either = await home.invok(city: city);
@@ -23,11 +36,12 @@ class HomeViewModel extends Cubit<HomeState> {
     );
   }
 
-  // Method to update the temperature unit
-  updateTemperatureUnit(String unit) {
+  Future<void> updateTemperatureUnit(String unit,
+      {required String city}) async {
     _unit = unit;
-    emit(HomeUnitUpdated(unit: unit)); // Emit the updated unit state
-    getWeather(
-        city: 'current-location'); // Update weather data based on new unit
+    await _saveUnit(unit);
+    emit(HomeUnitUpdated(unit: unit));
+
+    getWeather(city: city);
   }
 }

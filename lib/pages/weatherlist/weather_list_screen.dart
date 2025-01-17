@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:weather_app/pages/home/cubit/home_view_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeatherlistScreen extends StatefulWidget {
-  const WeatherlistScreen({super.key});
+  const WeatherlistScreen({super.key, this.city});
+
+  final String? city;
 
   @override
-  _WeatherlistScreenState createState() => _WeatherlistScreenState();
+  WeatherlistScreenState createState() => WeatherlistScreenState();
 }
 
-class _WeatherlistScreenState extends State<WeatherlistScreen> {
-  int? _selectedOption = 2; // Default option is Celsius
-  TextEditingController _searchController = TextEditingController();
+class WeatherlistScreenState extends State<WeatherlistScreen> {
+  int? _selectedOption;
+
+  final Logger _logger = Logger();
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the selected unit from HomeViewModel when the screen is initialized
+    _selectedOption = context.read<HomeViewModel>().unit == 'Celsius' ? 2 : 3;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
               Color(0xff1a2344),
               Color.fromARGB(225, 123, 35, 143),
               Colors.purple,
-              Color.fromARGB(225, 150, 45, 170)
-            ])),
+              Color.fromARGB(225, 150, 45, 170),
+            ],
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -61,15 +75,16 @@ class _WeatherlistScreenState extends State<WeatherlistScreen> {
                       setState(() {
                         _selectedOption = value;
                       });
-                      // When Celsius or Fahrenheit is selected, update the unit in the HomeViewModel
+
+                      // Update the unit in HomeViewModel
                       if (value == 3) {
-                        context
-                            .read<HomeViewModel>()
-                            .updateTemperatureUnit('Fahrenheit');
+                        context.read<HomeViewModel>().updateTemperatureUnit(
+                            'Fahrenheit',
+                            city: widget.city.toString());
                       } else if (value == 2) {
-                        context
-                            .read<HomeViewModel>()
-                            .updateTemperatureUnit('Celsius');
+                        context.read<HomeViewModel>().updateTemperatureUnit(
+                            'Celsius',
+                            city: widget.city.toString());
                       }
                     },
                     itemBuilder: (BuildContext context) {
@@ -82,7 +97,7 @@ class _WeatherlistScreenState extends State<WeatherlistScreen> {
                           value: 2,
                           child: Row(
                             children: [
-                              Text("Celsius"),
+                              Text("Celsius (°C)"),
                               if (_selectedOption == 2)
                                 Icon(Icons.check, size: 20.sp),
                             ],
@@ -92,7 +107,7 @@ class _WeatherlistScreenState extends State<WeatherlistScreen> {
                           value: 3,
                           child: Row(
                             children: [
-                              Text("Fahrenheit"),
+                              Text("Fahrenheit (°F)"),
                               if (_selectedOption == 3)
                                 Icon(Icons.check, size: 20.sp),
                             ],
@@ -114,10 +129,10 @@ class _WeatherlistScreenState extends State<WeatherlistScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       decoration: InputDecoration(
                         hintText: "Search...",
-                        hintStyle:
-                            TextStyle(color: Colors.white.withOpacity(0.6)),
+                        hintStyle: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.6)),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.2),
+                        fillColor: Colors.white.withValues(alpha: 0.2),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
@@ -131,7 +146,7 @@ class _WeatherlistScreenState extends State<WeatherlistScreen> {
                   IconButton(
                     onPressed: () {
                       String searchQuery = _searchController.text;
-                      print("Searching for: $searchQuery");
+                      _logger.w("Searching for: $searchQuery");
                     },
                     icon: Icon(
                       Icons.search,

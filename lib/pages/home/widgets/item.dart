@@ -6,11 +6,12 @@ import 'package:weather_app/core/routemanager/Routes.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
 
 class Item extends StatelessWidget {
-  const Item(
-      {super.key,
-      required this.view,
-      required this.temp,
-      required this.unitSign});
+  const Item({
+    super.key,
+    required this.view,
+    required this.temp,
+    required this.unitSign,
+  });
 
   final ResponseEntity view;
   final double temp;
@@ -27,10 +28,10 @@ class Item extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black, // Dark start
-                  Colors.grey[700]!, // Dark gray
-                  Colors.grey[500]!, // Medium gray
-                  Colors.grey[300]!, // Lighter gray
+                  Colors.black,
+                  Colors.grey[900]!,
+                  Colors.grey[700]!,
+                  Colors.grey[500]!,
                 ],
               ),
             ),
@@ -170,12 +171,12 @@ class Item extends StatelessWidget {
             top: 5.h,
             left: 5.w,
             child: IconButton(
-              icon: Icon(Icons.dark_mode_outlined,
-                  color: Colors.white, size: 35.sp),
-              onPressed: () {
-                final latLon = '${view.location!.lat}, ${view.location!.lon}';
-                context.push(AppRoutes.weatherlist, extra: latLon.toString());
-              },
+              icon: Icon(
+                Icons.dark_mode_outlined,
+                color: Colors.white,
+                size: 35.sp,
+              ),
+              onPressed: () {},
             ),
           ),
           Positioned(

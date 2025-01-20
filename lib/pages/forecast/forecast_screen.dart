@@ -29,10 +29,10 @@ class ForecastScreen extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black, // Dark start
-            Colors.grey[700]!, // Dark gray
-            Colors.grey[500]!, // Medium gray
-            Colors.grey[300]!, // Lighter gray
+            Colors.black,
+            Colors.grey[900]!,
+            Colors.grey[700]!,
+            Colors.grey[500]!,
           ],
         )),
         child: Column(

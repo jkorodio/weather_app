@@ -11,7 +11,7 @@ import 'package:weather_app/utils/utils.dart';
 class ForecastScreen extends StatelessWidget {
   ForecastScreen({super.key, required this.unitSign});
 
-  final String unitSign; // Accept the selected unit sign (°C or °F)
+  final String unitSign;
   final viewmodel = getIt<ForecastViewModel>();
   final location = LocationServices();
 
@@ -26,14 +26,15 @@ class ForecastScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              Color(0xff1a2344),
-              Color.fromARGB(225, 123, 35, 143),
-              Colors.purple,
-              Color.fromARGB(225, 150, 45, 170)
-            ])),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black, // Dark start
+            Colors.grey[700]!, // Dark gray
+            Colors.grey[500]!, // Medium gray
+            Colors.grey[300]!, // Lighter gray
+          ],
+        )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

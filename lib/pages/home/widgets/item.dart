@@ -14,7 +14,7 @@ class Item extends StatelessWidget {
 
   final ResponseEntity view;
   final double temp;
-  final String unitSign; // New parameter for unit sign
+  final String unitSign;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +27,10 @@ class Item extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xff1a2344),
-                  Color.fromARGB(225, 130, 30, 140),
-                  Colors.purple,
-                  Color.fromARGB(225, 150, 45, 170),
+                  Colors.black, // Dark start
+                  Colors.grey[700]!, // Dark gray
+                  Colors.grey[500]!, // Medium gray
+                  Colors.grey[300]!, // Lighter gray
                 ],
               ),
             ),
@@ -67,9 +67,8 @@ class Item extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: Colors.white),
                       ),
-                      // Display temperature with the unit sign (°C or °F)
                       Text(
-                        '${temp.toStringAsFixed(1)} $unitSign', // Adding the unit sign here
+                        '${temp.toStringAsFixed(1)} $unitSign',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 40.sp,
@@ -150,7 +149,8 @@ class Item extends StatelessWidget {
                       Center(
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff1a2344)),
+                              backgroundColor: Colors.grey[900]!,
+                            ),
                             onPressed: () {
                               context.push(AppRoutes.forecast, extra: unitSign);
                             },
@@ -167,13 +167,25 @@ class Item extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 5.h,
+            top: 5.h,
+            left: 5.w,
+            child: IconButton(
+              icon: Icon(Icons.dark_mode_outlined,
+                  color: Colors.white, size: 35.sp),
+              onPressed: () {
+                final latLon = '${view.location!.lat}, ${view.location!.lon}';
+                context.push(AppRoutes.weatherlist, extra: latLon.toString());
+              },
+            ),
+          ),
+          Positioned(
+            top: 5.h,
             right: 5.w,
             child: IconButton(
               icon: Icon(Icons.list, color: Colors.white, size: 35.sp),
               onPressed: () {
-                context.push(AppRoutes.weatherlist,
-                    extra: view.location!.name ?? '');
+                final latLon = '${view.location!.lat}, ${view.location!.lon}';
+                context.push(AppRoutes.weatherlist, extra: latLon.toString());
               },
             ),
           ),

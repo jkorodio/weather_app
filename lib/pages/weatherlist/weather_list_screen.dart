@@ -23,7 +23,6 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch the selected unit from HomeViewModel when the screen is initialized
     _selectedOption = context.read<HomeViewModel>().unit == 'Celsius' ? 2 : 3;
   }
 
@@ -36,10 +35,10 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xff1a2344),
-              Color.fromARGB(225, 123, 35, 143),
-              Colors.purple,
-              Color.fromARGB(225, 150, 45, 170),
+              Colors.black, // Dark start
+              Colors.grey[700]!, // Dark gray
+              Colors.grey[500]!, // Medium gray
+              Colors.grey[300]!, // Lighter gray
             ],
           ),
         ),
@@ -76,7 +75,6 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                         _selectedOption = value;
                       });
 
-                      // Update the unit in HomeViewModel
                       if (value == 3) {
                         context.read<HomeViewModel>().updateTemperatureUnit(
                             'Fahrenheit',

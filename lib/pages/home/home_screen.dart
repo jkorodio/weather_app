@@ -19,7 +19,6 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Get user's location and fetch weather data
     _fetchWeatherData();
   }
 
@@ -41,10 +40,10 @@ class HomeScreenState extends State<HomeScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xff1a2344),
-              Color.fromARGB(225, 130, 30, 140),
-              Colors.purple,
-              Color.fromARGB(225, 150, 45, 170),
+              Colors.black, // Dark start
+              Colors.grey[700]!, // Dark gray
+              Colors.grey[500]!, // Medium gray
+              Colors.grey[300]!, // Lighter gray
             ],
           ),
         ),
@@ -58,20 +57,15 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               );
             } else if (state is HomeSuccess) {
-              // Get the current temperature based on the selected unit
               final temperature = state.responseEntity.current!;
 
-              // Convert the values to double using `toDouble()`
               final temp = context.read<HomeViewModel>().unit == 'Celsius'
-                  ? (temperature.tempC?.toDouble() ?? 0.0) // safely handle null
-                  : (temperature.tempF?.toDouble() ??
-                      0.0); // safely handle null
+                  ? (temperature.tempC?.toDouble() ?? 0.0)
+                  : (temperature.tempF?.toDouble() ?? 0.0);
 
-              // Get the selected unit (Celsius or Fahrenheit)
               final unitSign =
                   context.read<HomeViewModel>().unit == 'Celsius' ? '°C' : '°F';
 
-              // Pass the `unitSign` to the `Item` widget
               return Item(
                   view: state.responseEntity, temp: temp, unitSign: unitSign);
             }

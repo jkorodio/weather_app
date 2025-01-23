@@ -10,9 +10,10 @@ import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:weather_app/utils/utils.dart';
 
 class ForecastScreen extends StatelessWidget {
-  ForecastScreen({super.key, required this.unitSign});
+  ForecastScreen({super.key, required this.unitSign, required this.city});
 
   final String unitSign;
+  final String city;
   final viewmodel = getIt<ForecastViewModel>();
   final location = LocationServices();
 
@@ -20,10 +21,15 @@ class ForecastScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = context.read<HomeViewModel>().darkMode;
 
-    location.getLocation().then((value) => {
-          if (value != null)
-            {viewmodel.getForecast('${value.latitude}+${value.longitude}')}
-        });
+    if (city.isNotEmpty) {
+      viewmodel.getForecast(city);
+    } else {
+      location.getLocation().then((value) {
+        if (value != null) {
+          viewmodel.getForecast('${value.latitude},${value.longitude}');
+        }
+      });
+    }
 
     return Scaffold(
       body: Container(

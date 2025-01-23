@@ -7,7 +7,8 @@ import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:weather_app/Pages/Home/widgets/item.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.city});
+  final String? city;
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -23,11 +24,17 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchWeatherData() async {
-    final value = await location.getLocation();
-    if (mounted && value != null) {
-      context.read<HomeViewModel>().getWeather(
-            city: '${value.latitude}, ${value.longitude}',
-          );
+    final city = widget.city; // Use the city passed through the constructor
+
+    if (city != null && city.isNotEmpty) {
+      context.read<HomeViewModel>().getWeather(city: city);
+    } else {
+      final value = await location.getLocation();
+      if (mounted && value != null) {
+        context.read<HomeViewModel>().getWeather(
+              city: '${value.latitude}, ${value.longitude}',
+            );
+      }
     }
   }
 
@@ -81,11 +88,9 @@ class HomeScreenState extends State<HomeScreen> {
                 unitSign: unitSign,
                 isDarkMode: isDarkMode, // Pass dark mode state
                 onToggleDarkMode: () {
-                  final location =
+                  final city = widget.city ??
                       '${state.responseEntity.location!.lat},${state.responseEntity.location!.lon}';
-                  context
-                      .read<HomeViewModel>()
-                      .toggleDarkMode(city: location.toString());
+                  context.read<HomeViewModel>().toggleDarkMode(city: city);
                 },
               );
             }

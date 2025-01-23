@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:weather_app/pages/weatherlist/cubit/weather_view_model.dart';
 
 class WeatherlistScreen extends StatefulWidget {
   const WeatherlistScreen({super.key, this.city});
@@ -17,18 +17,35 @@ class WeatherlistScreen extends StatefulWidget {
 class WeatherlistScreenState extends State<WeatherlistScreen> {
   int? _selectedOption;
 
-  final Logger _logger = Logger();
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    context.read<WeatherCubit>().loadCities();
     _selectedOption = context.read<HomeViewModel>().unit == 'Celsius' ? 2 : 3;
+  }
+
+  void _addCity(String city) {
+    if (city.isNotEmpty &&
+        !context.read<WeatherCubit>().cities.contains(city)) {
+      context.read<WeatherCubit>().addCity(city);
+      _searchController.clear();
+    } else if (city.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter a valid city name'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('This city is already in the list'),
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.read<HomeViewModel>().darkMode;
+    final cities = context.watch<WeatherCubit>().cities;
 
     return Scaffold(
       body: Container(
@@ -159,8 +176,8 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                   SizedBox(width: 10.w),
                   IconButton(
                     onPressed: () {
-                      String searchQuery = _searchController.text;
-                      _logger.w("Searching for: $searchQuery");
+                      String cityName = _searchController.text;
+                      _addCity(cityName);
                     },
                     icon: Icon(
                       Icons.search,
@@ -169,6 +186,33 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: cities.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      cities[index],
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.blue[900]!,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        // Remove the city when the delete button is pressed
+                        context.read<WeatherCubit>().removeCity(cities[index]);
+                      },
+                    ),
+                    onTap: () {
+                      String city = cities[index];
+                      context.push('/', extra: city);
+                    },
+                  );
+                },
               ),
             ),
           ],

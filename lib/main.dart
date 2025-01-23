@@ -8,6 +8,7 @@ import 'package:weather_app/pages/home/home_screen.dart';
 import 'package:weather_app/pages/weatherlist/weather_list_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/pages/home/cubit/home_view_model.dart';
+import 'package:weather_app/pages/weatherlist/cubit/weather_view_model.dart';
 
 void main() {
   configureDependencies();
@@ -22,8 +23,15 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(430, 930),
       builder: (context, child) {
-        return BlocProvider<HomeViewModel>(
-          create: (context) => getIt<HomeViewModel>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<HomeViewModel>(
+              create: (context) => getIt<HomeViewModel>(),
+            ),
+            BlocProvider<WeatherCubit>(
+              create: (context) => WeatherCubit(),
+            ),
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             routerConfig: _router,
@@ -38,7 +46,10 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => HomeScreen(),
+        builder: (context, state) {
+          final city = state.extra as String?;
+          return HomeScreen(city: city);
+        },
       ),
       GoRoute(
         path: AppRoutes.weatherlist,
@@ -50,8 +61,13 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: AppRoutes.forecast,
         builder: (context, state) {
-          final unitSign = state.extra as String? ?? 'Celsius';
-          return ForecastScreen(unitSign: unitSign);
+          final extra =
+              state.extra as Map<String, dynamic>? ?? {}; // Ensure it is a Map
+          final unitSign =
+              extra['unitSign'] as String? ?? '°C'; // Extract unitSign safely
+          final city = extra['city'] as String? ?? ''; // Extract city safely
+
+          return ForecastScreen(unitSign: unitSign, city: city);
         },
       ),
     ],

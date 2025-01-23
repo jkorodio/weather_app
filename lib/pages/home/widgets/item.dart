@@ -178,7 +178,10 @@ class Item extends StatelessWidget {
                                   : const Color.fromARGB(255, 111, 175, 247),
                             ),
                             onPressed: () {
-                              context.push(AppRoutes.forecast, extra: unitSign);
+                              final city = view.location?.name ??
+                                  '${view.location?.lat},${view.location?.lon}'; // Check if city exists, else use lat/lon
+                              context.push(AppRoutes.forecast,
+                                  extra: {'unitSign': unitSign, 'city': city});
                             },
                             child: Text(
                               'Next 7 Days Forecast',

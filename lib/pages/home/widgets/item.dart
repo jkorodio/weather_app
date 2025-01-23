@@ -175,7 +175,7 @@ class Item extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isDarkMode
                                   ? Colors.grey[900]!
-                                  : const Color.fromARGB(255, 111, 175, 247)!,
+                                  : const Color.fromARGB(255, 111, 175, 247),
                             ),
                             onPressed: () {
                               context.push(AppRoutes.forecast, extra: unitSign);

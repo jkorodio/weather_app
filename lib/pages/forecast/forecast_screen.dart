@@ -93,7 +93,7 @@ class ForecastScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: isDarkMode
                                     ? Colors.black.withValues(alpha: 0.5)
-                                    : const Color.fromARGB(255, 98, 196, 238)!,
+                                    : const Color.fromARGB(255, 98, 196, 238),
                                 borderRadius: BorderRadius.circular(20)),
                             child: ListTile(
                               leading: Image.network(

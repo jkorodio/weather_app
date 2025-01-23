@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:weather_app/core/routemanager/Routes.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
+import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 
 class Item extends StatelessWidget {
   const Item({
@@ -11,11 +13,15 @@ class Item extends StatelessWidget {
     required this.view,
     required this.temp,
     required this.unitSign,
+    required this.isDarkMode,
+    required this.onToggleDarkMode,
   });
 
   final ResponseEntity view;
   final double temp;
   final String unitSign;
+  final bool isDarkMode;
+  final VoidCallback onToggleDarkMode;
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +33,19 @@ class Item extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black,
-                  Colors.grey[900]!,
-                  Colors.grey[700]!,
-                  Colors.grey[500]!,
-                ],
+                colors: isDarkMode
+                    ? [
+                        Colors.black,
+                        Colors.grey[900]!,
+                        Colors.grey[700]!,
+                        Colors.grey[500]!,
+                      ]
+                    : [
+                        Colors.blue[100]!,
+                        Colors.blue[300]!,
+                        Colors.blue[500]!,
+                        Colors.blue[700]!,
+                      ],
               ),
             ),
             child: ListView(
@@ -46,8 +59,8 @@ class Item extends StatelessWidget {
                       view.location!.name ?? '',
                       style: TextStyle(
                           fontSize: 25.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
+                          fontWeight: FontWeight.w700,
+                          color: isDarkMode ? Colors.white : Colors.blue[900]!),
                     ),
                   ),
                 ),
@@ -64,15 +77,17 @@ class Item extends StatelessWidget {
                       Text(
                         view.current!.condition!.text ?? '',
                         style: TextStyle(
-                            fontSize: 20.sp,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white),
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!),
                       ),
                       Text(
                         '${temp.toStringAsFixed(1)} $unitSign',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40.sp,
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!,
+                            fontSize: 35.sp,
                             fontWeight: FontWeight.w700),
                       ),
                       SizedBox(height: 20.h),
@@ -82,14 +97,18 @@ class Item extends StatelessWidget {
                             Text(
                               'Max: ${unitSign == '°C' ? view.forecast!.forecastday![0].day!.maxtempC : view.forecast!.forecastday![0].day!.maxtempF} $unitSign',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: isDarkMode
+                                      ? Colors.white
+                                      : Colors.blue[900]!,
                                   fontSize: 25.sp,
                                   fontWeight: FontWeight.w700),
                             ),
                             Text(
                               'Min: ${unitSign == '°C' ? view.forecast!.forecastday![0].day!.mintempC : view.forecast!.forecastday![0].day!.mintempF} $unitSign',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: isDarkMode
+                                      ? Colors.white
+                                      : Colors.blue[900]!,
                                   fontSize: 25.sp,
                                   fontWeight: FontWeight.w700),
                             ),
@@ -106,7 +125,8 @@ class Item extends StatelessWidget {
                                     '',
                             size: 20.sp,
                             sizeicon: 50,
-                            color: Colors.white,
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!,
                             fontWeight: FontWeight.w700,
                           ),
                           CustomItem(
@@ -117,7 +137,8 @@ class Item extends StatelessWidget {
                                 '',
                             size: 20.sp,
                             sizeicon: 50,
-                            color: Colors.white,
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!,
                             fontWeight: FontWeight.w700,
                           )
                         ],
@@ -132,7 +153,8 @@ class Item extends StatelessWidget {
                             textdegre: '${view.current!.humidity ?? ''}',
                             size: 20.sp,
                             sizeicon: 50,
-                            color: Colors.white,
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!,
                             fontWeight: FontWeight.w700,
                           ),
                           CustomItem(
@@ -141,7 +163,8 @@ class Item extends StatelessWidget {
                             textdegre: '${view.current!.windKph ?? ''}',
                             size: 20.sp,
                             sizeicon: 50,
-                            color: Colors.white,
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!,
                             fontWeight: FontWeight.w700,
                           )
                         ],
@@ -150,7 +173,9 @@ class Item extends StatelessWidget {
                       Center(
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[900]!,
+                              backgroundColor: isDarkMode
+                                  ? Colors.grey[900]!
+                                  : const Color.fromARGB(255, 111, 175, 247)!,
                             ),
                             onPressed: () {
                               context.push(AppRoutes.forecast, extra: unitSign);
@@ -158,7 +183,10 @@ class Item extends StatelessWidget {
                             child: Text(
                               'Next 7 Days Forecast',
                               style: TextStyle(
-                                  fontSize: 21.sp, color: Colors.white),
+                                  fontSize: 21.sp,
+                                  color: isDarkMode
+                                      ? Colors.white
+                                      : Colors.blue[900]!),
                             )),
                       )
                     ],
@@ -172,18 +200,20 @@ class Item extends StatelessWidget {
             left: 5.w,
             child: IconButton(
               icon: Icon(
-                Icons.dark_mode_outlined,
-                color: Colors.white,
+                isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode,
+                color: isDarkMode ? Colors.white : Colors.blue[900]!,
                 size: 35.sp,
               ),
-              onPressed: () {},
+              onPressed: onToggleDarkMode,
             ),
           ),
           Positioned(
             top: 5.h,
             right: 5.w,
             child: IconButton(
-              icon: Icon(Icons.list, color: Colors.white, size: 35.sp),
+              icon: Icon(Icons.list,
+                  color: isDarkMode ? Colors.white : Colors.blue[900]!,
+                  size: 35.sp),
               onPressed: () {
                 final latLon = '${view.location!.lat}, ${view.location!.lon}';
                 context.push(AppRoutes.weatherlist, extra: latLon.toString());
@@ -218,6 +248,7 @@ class CustomItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.read<HomeViewModel>().darkMode;
     return Flexible(
       child: ClipRRect(
         child: BackdropFilter(
@@ -228,10 +259,18 @@ class CustomItem extends StatelessWidget {
             width: 150.w,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              gradient: LinearGradient(colors: [
-                Color(0xff1a2344).withValues(alpha: 0.5),
-                Color(0xff1a2344).withValues(alpha: 0.2),
-              ]),
+              gradient: LinearGradient(
+                  colors: isDarkMode
+                      ? [
+                          Color(0xff1a2344).withValues(alpha: 0.5),
+                          Color(0xff1a2344).withValues(alpha: 0.2),
+                        ]
+                      : [
+                          Color.fromARGB(255, 92, 124, 238)
+                              .withValues(alpha: 0.5),
+                          Color.fromARGB(255, 28, 73, 236)
+                              .withValues(alpha: 0.2),
+                        ]),
             ),
             child: Column(
               children: [

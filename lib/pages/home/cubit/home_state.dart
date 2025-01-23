@@ -21,3 +21,8 @@ class HomeUnitUpdated extends HomeState {
   final String unit;
   HomeUnitUpdated({required this.unit});
 }
+
+class HomeThemeUpdated extends HomeState {
+  final bool isDarkMode;
+  HomeThemeUpdated({required this.isDarkMode});
+}

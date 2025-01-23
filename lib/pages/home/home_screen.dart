@@ -39,16 +39,25 @@ class HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Colors.grey[900]!,
-              Colors.grey[700]!,
-              Colors.grey[500]!,
-            ],
+            colors: context.watch<HomeViewModel>().darkMode
+                ? [
+                    Colors.black,
+                    Colors.grey[900]!,
+                    Colors.grey[700]!,
+                    Colors.grey[500]!,
+                  ]
+                : [
+                    Colors.blue[100]!,
+                    Colors.blue[300]!,
+                    Colors.blue[500]!,
+                    Colors.blue[700]!,
+                  ],
           ),
         ),
         child: BlocBuilder<HomeViewModel, HomeState>(
           builder: (context, state) {
+            final isDarkMode = context.read<HomeViewModel>().darkMode;
+
             if (state is HomeError) {
               return Center(
                 child: Text(
@@ -67,10 +76,22 @@ class HomeScreenState extends State<HomeScreen> {
                   context.read<HomeViewModel>().unit == 'Celsius' ? '°C' : '°F';
 
               return Item(
-                  view: state.responseEntity, temp: temp, unitSign: unitSign);
+                view: state.responseEntity,
+                temp: temp,
+                unitSign: unitSign,
+                isDarkMode: isDarkMode, // Pass dark mode state
+                onToggleDarkMode: () {
+                  final location =
+                      '${state.responseEntity.location!.lat},${state.responseEntity.location!.lon}';
+                  context
+                      .read<HomeViewModel>()
+                      .toggleDarkMode(city: location.toString());
+                },
+              );
             }
             return Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              child: CircularProgressIndicator(
+                  color: isDarkMode ? Colors.white : Colors.blue[900]!),
             );
           },
         ),

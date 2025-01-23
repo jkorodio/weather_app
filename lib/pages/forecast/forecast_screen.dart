@@ -6,6 +6,7 @@ import 'package:weather_app/core/api/services.dart';
 import 'package:weather_app/core/injectable/injectable.dart';
 import 'package:weather_app/pages/forecast/cubit/forecast_state.dart';
 import 'package:weather_app/pages/forecast/cubit/forecast_view_model.dart';
+import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:weather_app/utils/utils.dart';
 
 class ForecastScreen extends StatelessWidget {
@@ -17,6 +18,8 @@ class ForecastScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.read<HomeViewModel>().darkMode;
+
     location.getLocation().then((value) => {
           if (value != null)
             {viewmodel.getForecast('${value.latitude}+${value.longitude}')}
@@ -28,12 +31,19 @@ class ForecastScreen extends StatelessWidget {
             gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.black,
-            Colors.grey[900]!,
-            Colors.grey[700]!,
-            Colors.grey[500]!,
-          ],
+          colors: isDarkMode
+              ? [
+                  Colors.black,
+                  Colors.grey[900]!,
+                  Colors.grey[700]!,
+                  Colors.grey[500]!,
+                ]
+              : [
+                  Colors.blue[100]!,
+                  Colors.blue[300]!,
+                  Colors.blue[500]!,
+                  Colors.blue[700]!,
+                ],
         )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,7 +60,7 @@ class ForecastScreen extends StatelessWidget {
                       icon: Icon(
                         Icons.arrow_back,
                         size: 30.sp,
-                        color: Colors.white,
+                        color: isDarkMode ? Colors.white : Colors.blue[900]!,
                       )),
                   Padding(
                     padding:
@@ -60,7 +70,7 @@ class ForecastScreen extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 30.sp,
-                          color: Colors.white),
+                          color: isDarkMode ? Colors.white : Colors.blue[900]!),
                     ),
                   )
                 ],
@@ -81,7 +91,9 @@ class ForecastScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 5.w, vertical: 15.h),
                             decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.5),
+                                color: isDarkMode
+                                    ? Colors.black.withValues(alpha: 0.5)
+                                    : const Color.fromARGB(255, 98, 196, 238)!,
                                 borderRadius: BorderRadius.circular(20)),
                             child: ListTile(
                               leading: Image.network(
@@ -90,7 +102,9 @@ class ForecastScreen extends StatelessWidget {
                                 '${unitSign == '°C' ? viewmodel.forecast[index].day!.avgtempC : viewmodel.forecast[index].day!.avgtempF} $unitSign'
                                 ' ${formatDate(viewmodel.forecast[index].date.toString())}',
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.blue[900]!,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 25.sp),
                               ),
@@ -98,7 +112,10 @@ class ForecastScreen extends StatelessWidget {
                                 'Max: ${unitSign == '°C' ? viewmodel.forecast[index].day!.maxtempC : viewmodel.forecast[index].day!.maxtempF} $unitSign'
                                 ' Min: ${unitSign == '°C' ? viewmodel.forecast[index].day!.mintempC : viewmodel.forecast[index].day!.mintempF} $unitSign',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 20.sp),
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.blue[900]!,
+                                    fontSize: 20.sp),
                               ),
                             ),
                           );
@@ -112,7 +129,8 @@ class ForecastScreen extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 25.sp,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white),
+                            color:
+                                isDarkMode ? Colors.white : Colors.blue[900]!),
                       ),
                     );
                   }
@@ -122,7 +140,7 @@ class ForecastScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 25.sp,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white),
+                          color: isDarkMode ? Colors.white : Colors.blue[900]!),
                     ),
                   );
                 },

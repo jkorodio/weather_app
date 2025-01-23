@@ -28,18 +28,27 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.read<HomeViewModel>().darkMode;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Colors.grey[900]!,
-              Colors.grey[700]!,
-              Colors.grey[500]!, // Lighter gray
-            ],
+            colors: isDarkMode
+                ? [
+                    Colors.black,
+                    Colors.grey[900]!,
+                    Colors.grey[700]!,
+                    Colors.grey[500]!,
+                  ]
+                : [
+                    Colors.blue[100]!,
+                    Colors.blue[300]!,
+                    Colors.blue[500]!,
+                    Colors.blue[700]!,
+                  ],
           ),
         ),
         child: Column(
@@ -57,18 +66,20 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                     icon: Icon(
                       Icons.arrow_back,
                       size: 30.sp,
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.white : Colors.blue[900]!,
                     ),
                   ),
                   Text(
                     'Weather List',
-                    style: TextStyle(color: Colors.white, fontSize: 25.sp),
+                    style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.blue[900]!,
+                        fontSize: 25.sp),
                   ),
                   PopupMenuButton<int>(
                     icon: Icon(
                       Icons.more_vert,
                       size: 30.sp,
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.white : Colors.blue[900]!,
                     ),
                     onSelected: (int value) {
                       setState(() {
@@ -128,9 +139,14 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                       decoration: InputDecoration(
                         hintText: "Search...",
                         hintStyle: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6)),
+                            color: isDarkMode
+                                ? Colors.white.withValues(alpha: 0.6)
+                                : Colors.blue[900]!),
                         filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.2),
+                        fillColor: isDarkMode
+                            ? Colors.white.withValues(alpha: 0.6)
+                            : const Color.fromARGB(255, 112, 180, 236)
+                                .withValues(alpha: 0.6),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
@@ -149,7 +165,7 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                     icon: Icon(
                       Icons.search,
                       size: 30.sp,
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.white : Colors.blue[900]!,
                     ),
                   ),
                 ],

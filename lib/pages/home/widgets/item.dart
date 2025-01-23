@@ -266,9 +266,9 @@ class CustomItem extends StatelessWidget {
                           Color(0xff1a2344).withValues(alpha: 0.2),
                         ]
                       : [
-                          Color.fromARGB(255, 92, 124, 238)
+                          Color.fromARGB(255, 80, 168, 244)
                               .withValues(alpha: 0.5),
-                          Color.fromARGB(255, 28, 73, 236)
+                          Color.fromARGB(255, 15, 72, 119)
                               .withValues(alpha: 0.2),
                         ]),
             ),

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
-        path: '/weatherlist',
+        path: AppRoutes.weatherlist,
         builder: (context, state) {
           final city = state.extra as String?;
           return WeatherlistScreen(city: city);

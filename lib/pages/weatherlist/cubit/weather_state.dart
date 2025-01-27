@@ -12,7 +12,34 @@ class WeatherStateError extends WeatherState {
   WeatherStateError({required this.fauilers});
 }
 
+abstract class Failures {
+  final String message;
+  Failures(this.message);
+
+  @override
+  String toString() => message; // Ensures errors print correctly
+}
+
+class NetworkError extends Failures {
+  NetworkError(super.message);
+}
+
 class WeatherStateSuccess extends WeatherState {
   ResponseEntity response;
   WeatherStateSuccess({required this.response});
+}
+
+class SearchSuccess extends WeatherState {
+  List<SearchEntity> response;
+  SearchSuccess({required this.response});
+}
+
+class WeatherStateTempUnit extends WeatherState {
+  final bool isCelsius;
+  WeatherStateTempUnit({required this.isCelsius});
+}
+
+class CitiesUpdated extends WeatherState {
+  final List<String> cities;
+  CitiesUpdated({required this.cities});
 }

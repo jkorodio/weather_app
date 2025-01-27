@@ -24,7 +24,7 @@ class ForecastScreen extends StatelessWidget {
     if (city.isNotEmpty) {
       viewmodel.getForecast(city);
     } else {
-      location.getLocation().then((value) {
+      location.getLocation.then((value) {
         if (value != null) {
           viewmodel.getForecast('${value.latitude},${value.longitude}');
         }

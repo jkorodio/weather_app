@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt<HomeViewModel>(),
             ),
             BlocProvider<WeatherCubit>(
-              create: (context) => WeatherCubit(),
+              create: (context) => getIt<WeatherCubit>(),
             ),
           ],
           child: MaterialApp.router(

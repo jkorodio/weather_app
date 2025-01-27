@@ -30,4 +30,10 @@ class ApiManager {
         'http://api.weatherapi.com/v1/forecast.json?key=ac77330cf2034093bbc52014251401&q=$city&days=7',
         options: Options(headers: headers, validateStatus: (status) => true));
   }
+
+  Future<Response> getCity(String city, {Map<String, dynamic>? headers}) {
+    return dio.get(
+        'http://api.weatherapi.com/v1/search.json?key=ac77330cf2034093bbc52014251401&q=$city',
+        options: Options(headers: headers, validateStatus: (status) => true));
+  }
 }

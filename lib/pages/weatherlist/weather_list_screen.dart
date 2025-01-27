@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/pages/weatherlist/cubit/weather_view_model.dart';
+import 'dart:developer';
 
 class WeatherlistScreen extends StatefulWidget {
   const WeatherlistScreen({super.key, this.city});
@@ -18,6 +19,7 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
   int? _selectedOption;
 
   final TextEditingController _searchController = TextEditingController();
+  bool _hasSearched = false;
 
   @override
   void initState() {
@@ -42,10 +44,20 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
     }
   }
 
+  void _searchCity(cityName) {
+    if (cityName.isNotEmpty) {
+      setState(() {
+        _hasSearched = true; // <-- Set to true when searching
+      });
+      context.read<WeatherCubit>().searchCity(cityName);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.read<HomeViewModel>().darkMode;
-    final cities = context.watch<WeatherCubit>().cities;
+    var cities = context.watch<WeatherCubit>().cities;
+    var searchResults = context.watch<WeatherCubit>().searchResults;
 
     return Scaffold(
       body: Container(
@@ -177,7 +189,8 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                   IconButton(
                     onPressed: () {
                       String cityName = _searchController.text;
-                      _addCity(cityName);
+                      // context.read<WeatherCubit>().searchCity(cityName);
+                      _searchCity(cityName);
                     },
                     icon: Icon(
                       Icons.search,
@@ -188,33 +201,79 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: cities.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      cities[index],
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.blue[900]!,
-                        fontSize: 18.sp,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        // Remove the city when the delete button is pressed
-                        context.read<WeatherCubit>().removeCity(cities[index]);
-                      },
-                    ),
-                    onTap: () {
-                      String city = cities[index];
-                      context.push('/', extra: city);
+            if (_hasSearched) ...[
+              if (searchResults.isNotEmpty) ...[
+                SizedBox(
+                  height: 200.h,
+                  child: ListView.builder(
+                    itemCount: searchResults.length,
+                    itemBuilder: (context, index) {
+                      var city = searchResults[index];
+                      log(city.toString());
+
+                      return ListTile(
+                        title: Text(
+                          "${city.name}, ${city.region}, ${city.country}",
+                          style: TextStyle(
+                              color:
+                                  isDarkMode ? Colors.white : Colors.blue[900]!,
+                              fontSize: 18.sp),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.add, color: Colors.green),
+                          onPressed: () {
+                            _addCity(
+                                "${city.name}, ${city.region}, ${city.country}");
+                          },
+                        ),
+                      );
                     },
-                  );
-                },
+                  ),
+                ),
+              ] else ...[
+                Padding(
+                  padding: EdgeInsets.all(20.h),
+                  child: Center(
+                    child: Text(
+                      "No result found",
+                      style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.blue[900]!,
+                          fontSize: 18.sp),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+            if (cities.isNotEmpty) ...[
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cities.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        cities[index],
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.blue[900]!,
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          context
+                              .read<WeatherCubit>()
+                              .removeCity(cities[index]);
+                        },
+                      ),
+                      onTap: () {
+                        String city = cities[index];
+                        context.push('/', extra: city);
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),

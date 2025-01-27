@@ -16,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final location = LocationServices();
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -28,12 +29,18 @@ class HomeScreenState extends State<HomeScreen> {
 
     if (city != null && city.isNotEmpty) {
       context.read<HomeViewModel>().getWeather(city: city);
+      setState(() {
+        _isLoading = false;
+      });
     } else {
-      final value = await location.getLocation();
+      final value = await location.getLocation;
       if (mounted && value != null) {
         context.read<HomeViewModel>().getWeather(
               city: '${value.latitude}, ${value.longitude}',
             );
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -61,45 +68,56 @@ class HomeScreenState extends State<HomeScreen> {
                   ],
           ),
         ),
-        child: BlocBuilder<HomeViewModel, HomeState>(
-          builder: (context, state) {
-            final isDarkMode = context.read<HomeViewModel>().darkMode;
-
-            if (state is HomeError) {
-              return Center(
-                child: Text(
-                  'Waiting Load Data',
-                  style: TextStyle(fontSize: 25.sp, color: Colors.white),
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: context.watch<HomeViewModel>().darkMode
+                      ? Colors.white
+                      : Colors.blue[900]!,
                 ),
-              );
-            } else if (state is HomeSuccess) {
-              final temperature = state.responseEntity.current!;
+              )
+            : BlocBuilder<HomeViewModel, HomeState>(
+                builder: (context, state) {
+                  if (state is HomeError) {
+                    return Center(
+                      child: Text(
+                        'Error loading weather data',
+                        style: TextStyle(fontSize: 25.sp, color: Colors.white),
+                      ),
+                    );
+                  } else if (state is HomeSuccess) {
+                    final temperature = state.responseEntity.current!;
+                    final temp = context.read<HomeViewModel>().unit == 'Celsius'
+                        ? (temperature.tempC?.toDouble() ?? 0.0)
+                        : (temperature.tempF?.toDouble() ?? 0.0);
 
-              final temp = context.read<HomeViewModel>().unit == 'Celsius'
-                  ? (temperature.tempC?.toDouble() ?? 0.0)
-                  : (temperature.tempF?.toDouble() ?? 0.0);
+                    final unitSign =
+                        context.read<HomeViewModel>().unit == 'Celsius'
+                            ? '°C'
+                            : '°F';
 
-              final unitSign =
-                  context.read<HomeViewModel>().unit == 'Celsius' ? '°C' : '°F';
-
-              return Item(
-                view: state.responseEntity,
-                temp: temp,
-                unitSign: unitSign,
-                isDarkMode: isDarkMode, // Pass dark mode state
-                onToggleDarkMode: () {
-                  final city = widget.city ??
-                      '${state.responseEntity.location!.lat},${state.responseEntity.location!.lon}';
-                  context.read<HomeViewModel>().toggleDarkMode(city: city);
+                    return Item(
+                      view: state.responseEntity,
+                      temp: temp,
+                      unitSign: unitSign,
+                      isDarkMode: context.watch<HomeViewModel>().darkMode,
+                      onToggleDarkMode: () {
+                        final city = widget.city ??
+                            '${state.responseEntity.location!.lat},${state.responseEntity.location!.lon}';
+                        context
+                            .read<HomeViewModel>()
+                            .toggleDarkMode(city: city);
+                      },
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                        color: context.watch<HomeViewModel>().darkMode
+                            ? Colors.white
+                            : Colors.blue[900]!),
+                  );
                 },
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                  color: isDarkMode ? Colors.white : Colors.blue[900]!),
-            );
-          },
-        ),
+              ),
       ),
     );
   }

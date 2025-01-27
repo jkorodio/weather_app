@@ -1,23 +1,34 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_app/domain/entity/response_entity.dart';
+import 'package:weather_app/domain/usecase/weather_usecases.dart';
+import 'package:weather_app/pages/weatherlist/cubit/weather_state.dart';
 
 enum TemperatureUnitEvent { changeToCelsius, changeToFahrenheit }
 
-class TemperatureUnitState {
-  final bool isCelsius;
-  TemperatureUnitState({required this.isCelsius});
-}
+class WeatherCubit extends Cubit<WeatherState> {
+  WeatherCubit({required this.usecase})
+      : super(WeatherStateTempUnit(isCelsius: true));
 
-class WeatherCubit extends Cubit<TemperatureUnitState> {
-  WeatherCubit() : super(TemperatureUnitState(isCelsius: true));
-
+  WeatherUsecase usecase;
   List<String> _cities = [];
+  List<SearchEntity> searchResults = [];
+
   List<String> get cities => _cities;
 
   Future<void> loadCities() async {
     final prefs = await SharedPreferences.getInstance();
     _cities = prefs.getStringList('cityList') ?? [];
-    emit(TemperatureUnitState(isCelsius: state.isCelsius));
+    if (state is WeatherStateTempUnit) {
+      emit(WeatherStateTempUnit(
+          isCelsius: (state as WeatherStateTempUnit).isCelsius));
+    } else {
+      // Handle other cases, or do nothing if you don't need to handle them here
+      // For example:
+      // emit(WeatherStateTempUnit(isCelsius: true)); // default state
+    }
   }
 
   Future<void> saveCities() async {
@@ -25,26 +36,41 @@ class WeatherCubit extends Cubit<TemperatureUnitState> {
     await prefs.setStringList('cityList', _cities);
   }
 
+  Future<void> searchCity(String city) async {
+    final result = await usecase.invok(city);
+    // log("❌ Network Error: ${result.toString()}");
+    result.fold(
+      (error) {
+        emit(WeatherStateError(fauilers: error));
+      },
+      (success) {
+        // log(success.toString());
+        List<SearchEntity> searchResultsList = success;
+        searchResults = searchResultsList;
+        emit(SearchSuccess(response: searchResults));
+      },
+    );
+  }
+
   void addCity(String city) {
     if (!_cities.contains(city)) {
       _cities.add(city);
-      saveCities(); // Save after adding the city
-      emit(TemperatureUnitState(isCelsius: state.isCelsius));
+      saveCities();
+      emit(CitiesUpdated(cities: _cities)); // Emit updated list of cities
     }
   }
 
   void removeCity(String city) {
     _cities.remove(city);
-    saveCities(); // Save after removing the city
-    emit(
-        TemperatureUnitState(isCelsius: state.isCelsius)); // Trigger the update
+    saveCities();
+    emit(CitiesUpdated(cities: _cities)); // Emit updated list of cities
   }
 
   void changeTemperatureUnit(TemperatureUnitEvent event) {
     if (event == TemperatureUnitEvent.changeToCelsius) {
-      emit(TemperatureUnitState(isCelsius: true));
+      emit(WeatherStateTempUnit(isCelsius: true));
     } else {
-      emit(TemperatureUnitState(isCelsius: false));
+      emit(WeatherStateTempUnit(isCelsius: false));
     }
   }
 }

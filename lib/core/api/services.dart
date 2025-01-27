@@ -2,46 +2,39 @@ import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
 class LocationServices {
-  // Create a logger instance
   final Logger _logger = Logger();
 
-  Future<Position?> getLocation() async {
+  Future<Position?> get getLocation async {
     LocationPermission permission = await Geolocator.checkPermission();
-    LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high, // Set the desired accuracy
-    );
-    permission = await Geolocator.checkPermission();
+    _logger.i('Permission status: $permission');
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Log the error instead of using print
         _logger.e('Location permission is denied');
         return Future.error('Location permission is denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Log the error instead of using print
       _logger.e(
-          'Location permission is permanently denied, we cannot request permission');
-      return Future.error(
-          'Location permission is permanently denied, we cannot request permission');
+          'Location permission is permanently denied, cannot request permission');
+      return Future.error('Location permission is permanently denied');
     }
 
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
-      bool isGpsEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!isGpsEnabled) {
-        // Log the message instead of using print
-        _logger.w('Please enable GPS');
-        return null;
-      }
+    bool isGpsEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isGpsEnabled) {
+      _logger.w('Please enable GPS');
+      return Future.error('GPS is disabled. Please enable it.');
+    }
+
+    try {
       return await Geolocator.getCurrentPosition(
-          locationSettings: locationSettings);
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      );
+    } catch (e) {
+      _logger.e('Error getting location: $e');
+      return Future.error('Error getting location');
     }
-
-    return await Geolocator.getCurrentPosition(
-        locationSettings: locationSettings);
   }
 }

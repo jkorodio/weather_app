@@ -50,7 +50,7 @@ class Item extends StatelessWidget {
             ),
             child: ListView(
               children: [
-                SizedBox(height: 10.h),
+                SizedBox(height: 30.h),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
@@ -179,7 +179,7 @@ class Item extends StatelessWidget {
                             ),
                             onPressed: () {
                               final city = view.location?.name ??
-                                  '${view.location?.lat},${view.location?.lon}'; // Check if city exists, else use lat/lon
+                                  '${view.location?.lat},${view.location?.lon}';
                               context.push(AppRoutes.forecast,
                                   extra: {'unitSign': unitSign, 'city': city});
                             },
@@ -199,7 +199,7 @@ class Item extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 5.h,
+            top: 20.h,
             left: 5.w,
             child: IconButton(
               icon: Icon(
@@ -211,15 +211,17 @@ class Item extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 5.h,
+            top: 20.h,
             right: 5.w,
             child: IconButton(
               icon: Icon(Icons.list,
                   color: isDarkMode ? Colors.white : Colors.blue[900]!,
                   size: 35.sp),
               onPressed: () {
-                final latLon = '${view.location!.lat}, ${view.location!.lon}';
-                context.push(AppRoutes.weatherlist, extra: latLon.toString());
+                // final latLon = '${view.location!.lat}, ${view.location!.lon}';
+                final city = view.location?.name ??
+                    '${view.location?.lat},${view.location?.lon}';
+                context.push(AppRoutes.weatherlist, extra: city);
               },
             ),
           ),

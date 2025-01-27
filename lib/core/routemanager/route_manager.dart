@@ -13,11 +13,13 @@ class Routemanager {
       case AppRoutes.weatherlist:
         return MaterialPageRoute(builder: (_) => WeatherlistScreen());
       case AppRoutes.forecast:
-        // Retrieve unitSign from settings.arguments
-        final unitSign =
-            settings.arguments as String? ?? '°C'; // Default to Celsius
+        final args = settings.arguments as Map<String, dynamic>? ?? {};
+        final unitSign = args['unitSign'] as String? ?? '°C';
+        final city = args['city'] as String? ?? '';
+
         return MaterialPageRoute(
-            builder: (_) => ForecastScreen(unitSign: unitSign));
+          builder: (_) => ForecastScreen(unitSign: unitSign, city: city),
+        );
       default:
         return error();
     }

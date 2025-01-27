@@ -10,6 +10,18 @@ class ResponseEntity {
   ForecastEntity? forecast;
 }
 
+class SearchEntity {
+  SearchEntity({
+    this.name,
+    this.region,
+    this.country,
+  });
+
+  String? name;
+  String? region;
+  String? country;
+}
+
 class ForecastEntity {
   ForecastEntity({
     this.forecastday,

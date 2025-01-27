@@ -32,6 +32,24 @@ class Forecast extends ForecastEntity {
   }
 }
 
+class Search extends SearchEntity {
+  Search({
+    super.name,
+    super.region,
+    super.country,
+  });
+
+  Search.fromJson(dynamic json) {
+    name = json['name'];
+    region = json['region'];
+    country = json['country'];
+  }
+
+  static List<Search> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => Search.fromJson(json)).toList();
+  }
+}
+
 class Forecastday extends ForecastEntityday {
   Forecastday({
     super.date,

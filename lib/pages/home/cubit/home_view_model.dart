@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 class HomeViewModel extends Cubit<HomeState> {
   final HomeUsecase home;
   String _unit = 'Celsius';
-  bool _darkMode = true;
+  bool _darkMode = false;
   static const String unitKey = "unit";
   static const String themeKey = "theme";
 
@@ -28,8 +28,8 @@ class HomeViewModel extends Cubit<HomeState> {
 
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    _darkMode = prefs.getBool(themeKey) ?? true; // Default to dark mode
-    emit(HomeThemeUpdated(isDarkMode: _darkMode)); // Emit theme update
+    _darkMode = prefs.getBool(themeKey) ?? true;
+    emit(HomeThemeUpdated(isDarkMode: _darkMode));
   }
 
   Future<void> _saveUnit(String unit) async {

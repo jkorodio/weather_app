@@ -63,7 +63,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i434.HomeRepositoryImp(home: gh<_i756.HomeDatasource>()));
     gh.factory<_i919.HomeUsecase>(
         () => _i919.HomeUsecase(homeRepository: gh<_i181.HomeRepository>()));
-    gh.lazySingleton<_i816.WeatherCubit>(() => registerModule.weatherCubit);
+    gh.lazySingleton<_i816.WeatherViewModel>(
+        () => registerModule.weatherViewModel);
     gh.factory<_i1027.HomeViewModel>(
         () => _i1027.HomeViewModel(home: gh<_i919.HomeUsecase>()));
     gh.factory<_i787.ForecastUsecases>(
@@ -80,6 +81,6 @@ class _$RegisterModule extends _i1027.RegisterModule {
   final _i174.GetIt _getIt;
 
   @override
-  _i816.WeatherCubit get weatherCubit =>
-      _i816.WeatherCubit(usecase: _getIt<_i35.WeatherUsecase>());
+  _i816.WeatherViewModel get weatherViewModel =>
+      _i816.WeatherViewModel(usecase: _getIt<_i35.WeatherUsecase>());
 }

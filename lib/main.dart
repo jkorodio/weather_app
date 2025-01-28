@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
             BlocProvider<HomeViewModel>(
               create: (context) => getIt<HomeViewModel>(),
             ),
-            BlocProvider<WeatherCubit>(
-              create: (context) => getIt<WeatherCubit>(),
+            BlocProvider<WeatherViewModel>(
+              create: (context) => getIt<WeatherViewModel>(),
             ),
           ],
           child: MaterialApp.router(
@@ -61,11 +61,9 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: AppRoutes.forecast,
         builder: (context, state) {
-          final extra =
-              state.extra as Map<String, dynamic>? ?? {}; // Ensure it is a Map
-          final unitSign =
-              extra['unitSign'] as String? ?? '°C'; // Extract unitSign safely
-          final city = extra['city'] as String? ?? ''; // Extract city safely
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final unitSign = extra['unitSign'] as String? ?? '°C';
+          final city = extra['city'] as String? ?? '';
 
           return ForecastScreen(unitSign: unitSign, city: city);
         },

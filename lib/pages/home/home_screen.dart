@@ -5,6 +5,7 @@ import 'package:weather_app/core/api/services.dart';
 import 'package:weather_app/pages/home/cubit/home_state.dart';
 import 'package:weather_app/pages/home/cubit/home_view_model.dart';
 import 'package:weather_app/Pages/Home/widgets/item.dart';
+import 'package:weather_app/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.city});
@@ -25,7 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchWeatherData() async {
-    final city = widget.city; // Use the city passed through the constructor
+    final city = widget.city;
 
     if (city != null && city.isNotEmpty) {
       context.read<HomeViewModel>().getWeather(city: city);
@@ -48,26 +49,8 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: context.watch<HomeViewModel>().darkMode
-                ? [
-                    Colors.black,
-                    Colors.grey[900]!,
-                    Colors.grey[700]!,
-                    Colors.grey[500]!,
-                  ]
-                : [
-                    Colors.blue[100]!,
-                    Colors.blue[300]!,
-                    Colors.blue[500]!,
-                    Colors.blue[700]!,
-                  ],
-          ),
-        ),
+      body: GradientBackground(
+        isDarkMode: context.watch<HomeViewModel>().darkMode,
         child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(

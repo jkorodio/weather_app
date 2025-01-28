@@ -4,14 +4,14 @@ import 'package:weather_app/core/api/api_manager.dart';
 import 'package:weather_app/data/datasource/homedata/home_datasource.dart';
 import 'package:weather_app/data/model/response_dto.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
-import 'package:weather_app/domain/usecase/fauilers.dart';
+import 'package:weather_app/domain/usecase/failures.dart';
 
 @Injectable(as: HomeDatasource)
 class HomeDatasourceImp implements HomeDatasource {
   ApiManager apimanager;
   HomeDatasourceImp({required this.apimanager});
   @override
-  Future<Either<Fauilers, ResponseEntity>> getWeather({String? city}) async {
+  Future<Either<Failures, ResponseEntity>> getWeather({String? city}) async {
     try {
       var response = await apimanager.getWeather(city: city);
       var homeResponse = ResponseDto.fromJson(response.data);

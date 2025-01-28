@@ -13,9 +13,9 @@ class ForecastViewModel extends Cubit<ForecastState> {
 
   getForecast(String city) async {
     emit(ForecastStateLoading());
-    var either = await usecase.invok(city);
+    var either = await usecase.invoke(city);
     either.fold(
-      (error) => emit(ForecastStateError(fauilers: error)),
+      (error) => emit(ForecastStateError(failures: error)),
       (success) {
         forecast = success.forecast!.forecastday ?? [];
         emit(ForecastStateSuccess(response: success));

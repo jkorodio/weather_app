@@ -4,7 +4,7 @@ import 'package:weather_app/core/api/api_manager.dart';
 import 'package:weather_app/data/datasource/weatherdata/weather_datasource.dart';
 import 'package:weather_app/data/model/response_dto.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
-import 'package:weather_app/domain/usecase/fauilers.dart';
+import 'package:weather_app/domain/usecase/failures.dart';
 
 @Injectable(as: WeatherDatasource)
 class WeatherDatasourceImp implements WeatherDatasource {
@@ -12,7 +12,7 @@ class WeatherDatasourceImp implements WeatherDatasource {
   WeatherDatasourceImp({required this.api});
 
   @override
-  Future<Either<Fauilers, List<SearchEntity>>> getCity(String? city) async {
+  Future<Either<Failures, List<SearchEntity>>> getCity(String? city) async {
     try {
       var response = await api.getCity(city ?? '');
 

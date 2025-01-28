@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
@@ -8,8 +6,8 @@ import 'package:weather_app/pages/weatherlist/cubit/weather_state.dart';
 
 enum TemperatureUnitEvent { changeToCelsius, changeToFahrenheit }
 
-class WeatherCubit extends Cubit<WeatherState> {
-  WeatherCubit({required this.usecase})
+class WeatherViewModel extends Cubit<WeatherState> {
+  WeatherViewModel({required this.usecase})
       : super(WeatherStateTempUnit(isCelsius: true));
 
   WeatherUsecase usecase;
@@ -27,7 +25,7 @@ class WeatherCubit extends Cubit<WeatherState> {
     } else {
       // Handle other cases, or do nothing if you don't need to handle them here
       // For example:
-      // emit(WeatherStateTempUnit(isCelsius: true)); // default state
+      // emit(WeatherStateTempUnit(isCelsius: t rue)); // default state
     }
   }
 
@@ -37,11 +35,11 @@ class WeatherCubit extends Cubit<WeatherState> {
   }
 
   Future<void> searchCity(String city) async {
-    final result = await usecase.invok(city);
+    final result = await usecase.invoke(city);
     // log("❌ Network Error: ${result.toString()}");
     result.fold(
       (error) {
-        emit(WeatherStateError(fauilers: error));
+        emit(WeatherStateError(failures: error));
       },
       (success) {
         // log(success.toString());
@@ -56,14 +54,14 @@ class WeatherCubit extends Cubit<WeatherState> {
     if (!_cities.contains(city)) {
       _cities.add(city);
       saveCities();
-      emit(CitiesUpdated(cities: _cities)); // Emit updated list of cities
+      emit(CitiesUpdated(cities: _cities));
     }
   }
 
   void removeCity(String city) {
     _cities.remove(city);
     saveCities();
-    emit(CitiesUpdated(cities: _cities)); // Emit updated list of cities
+    emit(CitiesUpdated(cities: _cities));
   }
 
   void changeTemperatureUnit(TemperatureUnitEvent event) {

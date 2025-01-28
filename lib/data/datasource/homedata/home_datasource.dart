@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:weather_app/domain/entity/response_entity.dart';
-import 'package:weather_app/domain/usecase/fauilers.dart';
+import 'package:weather_app/domain/usecase/failures.dart';
 
 abstract class HomeDatasource {
-  Future<Either<Fauilers, ResponseEntity>> getWeather({String? city});
+  Future<Either<Failures, ResponseEntity>> getWeather({String? city});
 }

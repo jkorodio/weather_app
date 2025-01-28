@@ -32,25 +32,8 @@ class ForecastScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDarkMode
-              ? [
-                  Colors.black,
-                  Colors.grey[900]!,
-                  Colors.grey[700]!,
-                  Colors.grey[500]!,
-                ]
-              : [
-                  Colors.blue[100]!,
-                  Colors.blue[300]!,
-                  Colors.blue[500]!,
-                  Colors.blue[700]!,
-                ],
-        )),
+      body: GradientBackground(
+        isDarkMode: isDarkMode,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -127,7 +110,7 @@ class ForecastScreen extends StatelessWidget {
                           );
                         });
                   } else if (state is ForecastStateError) {
-                    return Text(state.fauilers.errorMessage);
+                    return Text(state.failures.errorMessage);
                   } else if (state is ForecastStateLoading) {
                     return Center(
                       child: Text(

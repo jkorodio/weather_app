@@ -60,9 +60,9 @@ class HomeViewModel extends Cubit<HomeState> {
 
   getWeather({String? city}) async {
     emit(HomeLoading());
-    var either = await home.invok(city: city);
+    var either = await home.invoke(city: city);
     either.fold(
-      (error) => emit(HomeError(fauilers: error)),
+      (error) => emit(HomeError(failures: error)),
       (success) => emit(HomeSuccess(responseEntity: success)),
     );
   }

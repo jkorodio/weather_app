@@ -1,4 +1,3 @@
-// routemanager.dart
 import 'package:flutter/material.dart';
 import 'package:weather_app/Core/routemanager/routes.dart';
 import 'package:weather_app/pages/forecast/forecast_screen.dart';

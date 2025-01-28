@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/pages/weatherlist/cubit/weather_view_model.dart';
 import 'dart:developer';
 
+import 'package:weather_app/utils/utils.dart';
+
 class WeatherlistScreen extends StatefulWidget {
   const WeatherlistScreen({super.key, this.city});
 
@@ -24,14 +26,14 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<WeatherCubit>().loadCities();
+    context.read<WeatherViewModel>().loadCities();
     _selectedOption = context.read<HomeViewModel>().unit == 'Celsius' ? 2 : 3;
   }
 
   void _addCity(String city) {
     if (city.isNotEmpty &&
-        !context.read<WeatherCubit>().cities.contains(city)) {
-      context.read<WeatherCubit>().addCity(city);
+        !context.read<WeatherViewModel>().cities.contains(city)) {
+      context.read<WeatherViewModel>().addCity(city);
       _searchController.clear();
     } else if (city.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -47,39 +49,21 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
   void _searchCity(cityName) {
     if (cityName.isNotEmpty) {
       setState(() {
-        _hasSearched = true; // <-- Set to true when searching
+        _hasSearched = true;
       });
-      context.read<WeatherCubit>().searchCity(cityName);
+      context.read<WeatherViewModel>().searchCity(cityName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.read<HomeViewModel>().darkMode;
-    var cities = context.watch<WeatherCubit>().cities;
-    var searchResults = context.watch<WeatherCubit>().searchResults;
+    var cities = context.watch<WeatherViewModel>().cities;
+    var searchResults = context.watch<WeatherViewModel>().searchResults;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDarkMode
-                ? [
-                    Colors.black,
-                    Colors.grey[900]!,
-                    Colors.grey[700]!,
-                    Colors.grey[500]!,
-                  ]
-                : [
-                    Colors.blue[100]!,
-                    Colors.blue[300]!,
-                    Colors.blue[500]!,
-                    Colors.blue[700]!,
-                  ],
-          ),
-        ),
+      body: GradientBackground(
+        isDarkMode: isDarkMode,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -127,10 +111,10 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                     },
                     itemBuilder: (BuildContext context) {
                       return [
-                        PopupMenuItem<int>(
-                          value: 1,
-                          child: Text("Edit List"),
-                        ),
+                        // PopupMenuItem<int>(
+                        //   value: 1,
+                        //   child: Text("Edit List"),
+                        // ),
                         PopupMenuItem<int>(
                           value: 2,
                           child: Row(
@@ -189,7 +173,7 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                   IconButton(
                     onPressed: () {
                       String cityName = _searchController.text;
-                      // context.read<WeatherCubit>().searchCity(cityName);
+                      // context.read<WeatherViewModel>().searchCity(cityName);
                       _searchCity(cityName);
                     },
                     icon: Icon(
@@ -261,7 +245,7 @@ class WeatherlistScreenState extends State<WeatherlistScreen> {
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           context
-                              .read<WeatherCubit>()
+                              .read<WeatherViewModel>()
                               .removeCity(cities[index]);
                         },
                       ),
